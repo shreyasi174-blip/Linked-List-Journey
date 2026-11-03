@@ -1,0 +1,106 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+void insertposition(int data, int position)
+{
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    if(newNode == NULL)
+        return;
+
+    newNode->data = data;
+
+    if(position < 1) {
+        printf("Invalid position\n");
+        free(newNode);
+        return;
+    }
+
+    if(position == 1)
+    {
+        if(head == NULL)
+        {
+            head = newNode;
+            newNode->next = head;
+            return;
+        }
+
+        struct Node *current = head;
+
+        while(current->next != head)
+            current = current->next;
+
+        newNode->next = head;
+        current->next = newNode;
+        head = newNode;
+        return;
+    }
+
+    struct Node *current = head;
+
+    if(current == NULL) {
+        printf("Invalid position\n");
+        free(newNode);
+        return;
+    }
+
+    for(int i = 1; i < position-1 && current->next != head; i++)
+        current = current->next;
+
+    if(current->next == head && position > 2)
+    {
+        printf("Invalid position\n");
+        free(newNode);
+        return;
+    }
+
+    newNode->next = current->next;
+    current->next = newNode;
+}
+
+void display()
+{
+    struct Node *temp = head;
+
+    if(head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while(temp != head);
+
+    printf("HEAD\n");
+}
+
+int main()
+{
+    insertposition(10, 1);
+    insertposition(20, 2);
+    insertposition(40, 3);
+
+    printf("Before insertion:\n");
+    display();
+
+    insertposition(30, 3);
+
+    printf("After insertion:\n");
+    display();
+
+    insertposition(90, 1);
+
+    printf("After inserting at position 1:\n");
+    display();
+
+    return 0;
+}
